@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import os
+from pathlib import Path
 
 # Config
 st.set_page_config(
@@ -9,16 +11,51 @@ st.set_page_config(
     layout="wide"
 )
 
-# Function to load data
+# Function to load data with proper path handling
 @st.cache_data
 def load_data():
-    df_hour = pd.read_csv('hourly_cleaned.csv')
-    df_day = pd.read_csv('daily_cleaned.csv')
+    # Get the directory where the script is located
+    script_dir = Path(__file__).parent
+    
+    # Define paths to the data files
+    hour_file = script_dir / "hourly_cleaned.csv"
+    day_file = script_dir / "daily_cleaned.csv"
+    
+    # Try different path options if files aren't found
+    if not hour_file.exists():
+        # Try relative to the current working directory
+        hour_file = Path("dashboard/hourly_cleaned.csv")
+        if not hour_file.exists():
+            hour_file = Path("hourly_cleaned.csv")
+    
+    if not day_file.exists():
+        # Try relative to the current working directory
+        day_file = Path("dashboard/daily_cleaned.csv")
+        if not day_file.exists():
+            day_file = Path("daily_cleaned.csv")
+    
+    # Load the data
+    try:
+        df_hour = pd.read_csv(hour_file)
+        df_day = pd.read_csv(day_file)
+        # st.success(f"Data loaded successfully from {hour_file} and {day_file}")
+    except FileNotFoundError as e:
+        st.error(f"Error loading data: {e}")
+        # Create empty DataFrames as fallback
+        df_hour = pd.DataFrame()
+        df_day = pd.DataFrame()
     
     return df_hour, df_day
 
 # Load data
 df_hour, df_day = load_data()
+
+# Display warning if data is empty
+if df_hour.empty or df_day.empty:
+    st.warning("⚠️ Data could not be loaded. Please check file paths in the deployment.")
+    st.info(f"Current working directory: {os.getcwd()}")
+    st.info(f"Files in current directory: {[f for f in os.listdir('.') if os.path.isfile(f)]}")
+    st.stop()
 
 # Dashboard title
 st.title("🚲 Bike Sharing Analysis Dashboard")
