@@ -24,11 +24,11 @@ Bike-Sharing-Analysis/
 │   └── hourly_cleaned.csv # Data per jam yang sudah dibersihkan
 ├── dataset/            # Folder dataset mentah
 │   ├── day.csv          # Data harian sebelum preprocessing
-│   ├── hour.csv         # Data per jam sebelum preprocessing
-│   └── Readme.txt       # Deskripsi dataset
-├── main.ipynb          # Notebook utama untuk eksplorasi dan analisis
+│   └── hour.csv         # Data per jam sebelum preprocessing
+├── notebook.ipynb          # Notebook utama untuk eksplorasi dan analisis
 ├── README.md           # Dokumentasi proyek
 └── requirements.txt     # Daftar dependensi Python
+└── url.txt     # Link menuju dashboard Streamlit
 ```
 
 ## 🔍 Exploratory Data Analysis (EDA)
